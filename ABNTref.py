@@ -408,7 +408,8 @@ class ABNTref(object):
                 e['cite'] = e['org-short']
                 e['author'] = ref = e['org-short'].upper() + ' — ' + e['organization']
             else:
-                e['author'] = e['cite'] = ref = e['organization']
+                e['author'] = e['cite'] = e['organization']
+                ref = e['organization'].upper()
             del e['organization']
         else:
             e['title'] = re.sub('([^ ]*) (.*)', first_upper, e['title'])

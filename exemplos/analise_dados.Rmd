@@ -1,0 +1,43 @@
+---
+title: "Exemplo de uso do Rmarkdown com abntref"
+author: "Jakson Alves de Aquino"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    dev: "svg"
+    pandoc_args: ['--filter', 'abntref']
+  pdf_document:
+    dev: "cairo_pdf"
+    pandoc_args: ['--filter', 'abntref']
+citeproc: false
+abntref: "negrito subtitulo completo"
+bibliography: "bibliografia.bib"
+...
+
+
+Para usar o `abntref` em arquivos `.Rmd`, é preciso adicionar ao tipo de
+output a opção `pandoc_args`, como é feito no cabeçalho YAML desde arquivo.
+Apenas para testar, alguns exemplos de citação: @santos1994 e @nbr60232000.
+
+E, para finalizar, um gráfico de dispersão.
+
+```{r grafico, echo=FALSE, fig.width=4, fig.height=2.5, fig.cap="Gráfico de dispersão"}
+par(mar = c(4, 4, 0, 0)+0.1, cex = 0.7)
+x <- rnorm(100)
+y <- rnorm(100) + 0.7 * x
+m <- lm(y ~ x)
+plot(y ~ x)
+abline(m, col = "blue")
+```
+
+E uma tabela.
+
+```{r tabela, echo=FALSE}
+kable(summary(m)$coefficients,
+      caption = "Resultado de análise de regressão")
+```
+
+
+
+
+# Referências

@@ -3,7 +3,7 @@ title: "Comparação: abnTeX2cite, pandoc-citeproc e abntref"
 author: "Jakson Alves de Aquino"
 date: "20 de julho de 2018"
 bibliography: "bibliografia.bib"
-abntref: "obediente"
+abntref: "obediente url-completa"
 csl: "abnt.csl"
 ...
 
@@ -110,5 +110,13 @@ dois, como no primeiro exemplo a seguir em que é citado um manual da ABNT.
     BRASILEIRO DE CIÊNCIA DO SOLO, 26., 1997, Rio de Janeiro. *Resumos...* Rio
     de Janeiro: Sociedade Brasileira de Ciência do Solo, 1997. p. 443. Ref. 6–141.
 
+  - *Artigo* de lei [@brasil1999] com endereço da página e data de acesso
+    atualizados:
+
+    BRASIL. Lei n o 9.887, de 7 de dezembro de 1999. altera a legislação
+    tributária federal. *Diário Oficial \[da\] República Federativa do Brasil*,
+    Brasília, DF, 8 dez. 1999.
+    Disponível em: \<<http://www.in.gov.br/mp_leis/leis_texto.aps?Id=Lei%209887>\>.
+    Acesso em: 22 dez. 1999.
 
 # Referências

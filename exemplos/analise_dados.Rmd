@@ -2,6 +2,8 @@
 title: "Exemplo de uso do Rmarkdown com abntref"
 author: "Jakson Alves de Aquino"
 date: "`r format(Sys.time(), '%d %B %Y')`"
+geometry: "margin=1.4in"
+latex-engine: "xelatex"
 output:
   html_document:
     dev: "svg"
@@ -10,34 +12,30 @@ output:
     dev: "cairo_pdf"
     pandoc_args: ['--filter', 'abntref']
 citeproc: false
-abntref: "negrito subtitulo completo"
-bibliography: "bibliografia.bib"
+abntref: "negrito subtitulo completo bibliografia.bib"
 ...
 
 
 Para usar o `abntref` em arquivos `.Rmd`, é preciso adicionar ao tipo de
 output a opção `pandoc_args`, como é feito no cabeçalho YAML desde arquivo.
-Apenas para testar, alguns exemplos de citação: @santos1994 e @nbr60232000.
+E, para evitar que o `pandoc-citeproc` seja automaticamente executado, existem
+duas opções de configuração do cabeçalho YAML: acrescentar o campo `citeproc`
+com valor `false` ou eliminar o campo `bibliography` e adicionar o nome do
+arquivo bib às opções do `abntref`. De qualquer maneira, não haverá problema
+se o `pandoc-citeproc` for executado porque ele não encontrará mais nenhum
+código de citação.
 
-E, para finalizar, um gráfico de dispersão.
+Apenas para testar, alguns exemplos de citação: @gilbert04a e @nbr60232000.
 
-```{r grafico, echo=FALSE, fig.width=4, fig.height=2.5, fig.cap="Gráfico de dispersão"}
-par(mar = c(4, 4, 0, 0)+0.1, cex = 0.7)
+E, para finalizar, uma tabela:
+
+```{r tabela, echo=FALSE}
+library("knitr")
 x <- rnorm(100)
 y <- rnorm(100) + 0.7 * x
 m <- lm(y ~ x)
-plot(y ~ x)
-abline(m, col = "blue")
-```
-
-E uma tabela.
-
-```{r tabela, echo=FALSE}
 kable(summary(m)$coefficients,
       caption = "Resultado de análise de regressão")
 ```
-
-
-
 
 # Referências

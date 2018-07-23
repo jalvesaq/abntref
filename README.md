@@ -48,37 +48,45 @@ abntref arquivo.md > novo_arquivo.md
 
 O `abntref` possui alguns argumentos que modificam o resultado obtido:
 
+  - *ajuda* : Mostra este texto de ajuda.
 
- -------------------------------------------------------------------------
- **Opção**     **Efeito**
- ------------  -----------------------------------------------------------
- ajuda         mostra este texto de ajuda
+  - *sem-links* : Não cria link do ano citado para a referência.
 
- sem-links     não criar link do ano citado para a referência.
+  - *latex* : Usa código LaTeX para produzir links.
 
- latex         usar código LaTeX para produzir links.
+  - *negrito* : Usa **negrito** para enfatizar títulos.
 
- negrito       usar **negrito** para enfatizar títulos.
+  - *discreto* : Omite texto de alerta para citações ausentes.
 
- discreto      omitir texto de alerta para citações ausentes.
+  - *subtítulo* : Realça a parte do título após :?!
 
- subtítulo     realçar a parte do título após :?!
+  - *completo* : Mostra primeiro nome completo.
 
- completo      mostrar primeiro nome completo.
+  - *url-completa*: Mostra o valor do campo `url` (endereço de internet)
+    completo cercado por chevron (`<` e `>`) e sem link ativo. Se esta opção
+    estiver ausente, o endereço no link será completo, mas o texto exibido
+    para o leitor não incluirá o prefixo “http://” e o restante do endereço
+    após a primeira “/”, e também não será incluído chevron.
 
- repetido      não substituir nomes repetidos por sublinhados.
+  - *repetido* : Não substitui nomes repetidos por sublinhados.
 
- obediente     contrariar regras da língua portuguesa e obedecer a
-               ABNT, usando ponto-e-vírgula para separar coautores
-               em citações.
+  - *normalsize* ou *footnotesize* : Comando LaTeX indicativo do tamanho da
+    fonte a ser usada nas referências em arquivos pdf. Se não for indicado,
+    será usado tamanho *small*.
 
- arquivo.bib   se não for indicado o nome do arquivo .bib, o
-               arquivo.md deverá ter um cabeçalho YAML com o campo
-               bibliography definido.
+  - *singlespacing*, *onehalfspacing* ou *doublespacing* : Comando LaTeX
+    indicativo do espaçamento entre parágrafos nas referências. Requer que o
+    pacote `setspace` seja carregado no LaTex. Se não for indicado, será
+    mantido o espaçamento dos parágrafos anteriores.
 
- arquivo.md    se não for indicado o nome do arquivo .md, o conteúdo
-               markdown deve ser passado como input padrão (stdin).
- -------------------------------------------------------------------------
+  - *obediente* : Contraria regras da língua portuguesa e obedece a ABNT,
+    usando ponto-e-vírgula para separar coautores em citações.
+
+  - *arquivo.bib* : Se não for indicado o nome do arquivo .bib, o arquivo.md
+    deverá ter um cabeçalho YAML com o campo bibliography definido.
+
+  - *arquivo.md* : Se não for indicado o nome do arquivo .md, o conteúdo
+    markdown deve ser passado como input padrão (stdin).
 
 
 Se o `abntref` estiver sendo usado como filtro, as opções devem ser passadas no
@@ -96,29 +104,23 @@ cat arquivo.md | abntref latex | pandoc -o arquivo.pdf
 
 ## Tipos de referência reconhecidos
 
-O ABNTref reconhece somente os seguintes tipos de referência:
+O ABNTref reconhece somente os seguintes tipos de referência em arquivos .bib:
 
- -------------------------------------------------------------------------
- **Nome BibTeX**   **Significado**
- ----------------  -------------------------------------------------------
- Article           Artigo de periódico acadêmico ou de jornal de notícias.
+  - *Article* : Artigo de periódico acadêmico ou de jornal de notícias.
 
- Book              Livro.
+  - *Book* : Livro.
 
- InBook            Capítulo de livro (usado quando foi lido apenas um
-                   capítulo de um livro escrito por apenas um autor ou
-                   uma equipe de coautores).
+  - *InBook* : Capítulo de livro (usado quando foi lido apenas um capítulo de
+    um livro escrito por apenas um autor ou uma equipe de coautores).
 
- InCollection      Capítulo de livro que é uma coletânea de capítulos
-                   escritos por diferentes autores ou equipes de
-                   coautores.
+  - *InCollection* : Capítulo de livro que é uma coletânea de capítulos
+    escritos por diferentes autores ou equipes de coautores.
 
- PhdThesis,        Tese de doutorado, Dissertação de mestrado ou
- MasterThesis,     Monografia de conclusão de curso.
- Monography
- -------------------------------------------------------------------------
+  - *PhdThesis*, *MasterThesis* ou *Monography* : Tese de doutorado,
+    Dissertação de mestrado ou Monografia de conclusão de curso.
 
-Se suas referências forem de um tipo diferente, serão tratadas como um dos tipos acima.
+Se as referências forem de um tipo diferente, serão tratadas como um dos tipos acima.
+
 
 ## Comparação com pandoc-citeproc
 
@@ -127,6 +129,9 @@ Se suas referências forem de um tipo diferente, serão tratadas como um dos tip
     - Menor variedade nos tipos de referência formatados.
 
     - Funciona apenas com bibliografia no formato `.bib`.
+
+    - Desenvolvido e testado apenas no Linux com Pyton 3 e XeLaTex, ou seja,
+      com caracteres codificados em UTF-8 (Unicode).
 
   - *Vantagem*:
 
@@ -142,3 +147,29 @@ Se suas referências forem de um tipo diferente, serão tratadas como um dos tip
     - O `abntref` é mais exagerado ao avisar que falta uma referência. Além de
       colocar interrogações no ano da citação não encontrada, ele adiciona um
       texto de alerta em letras maiúsculas na citação e outro nas referências.
+
+    - Se o campo `author` estiver ausente, o campo `organization`, se
+      presente, será usado como autor e, neste caso, o nome do “autor” não
+      será apresentado de forma invertida nas referências — SOBRENOME, Nome —
+      e será apresentado o nome completo nas citações. Isso é útil quando a
+      autoria de uma obra é atribuída a uma organização. Se, por exemplo, for
+      citada uma lei do estado do Rio Grande do Norte de 2001, espera-se (RIO
+      GRANDE DO NORTE, 2001) e não (NORTE, 2001).
+
+    - O campo `org-short` ou o campo `shortauthor`, se presente, será usado
+      nas citações e, nas referências, inserida antes do nome do autor ou da
+      organização. No exemplo acima, a citação poderia ser resumida para
+      (RN, 2001).
+
+    - Quando o output é LaTeX (para produção de pdf), o caractere `\x00ad`
+      (*soft hyphen*) é inserido entre cada uma das letras do texto de um link
+      nas referências (resultante do campo `url` do arquivo .bib). Isso
+      garante que o link seja hifenizado imediatamente antes da primeira letra
+      que ultrapassaria a margem do texto.
+
+    - Endereços de internet são abreviados nas referências. Motivo: se o
+      trabalho estiver impresso, será mais fácil para o leitor encontrar a
+      página referenciada procurando por parte do título ou do endereço da
+      página do que tentando digitar com exatidão um longo endereço completo
+      na barra de endereços do navegador e, se não estiver impresso, bastará
+      clicar no link e, este, sim, precisa estar completo.

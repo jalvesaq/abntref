@@ -19,7 +19,8 @@ class ABNTref(object):
 
     # Options
     _o = {'type': 'html', 'anchor': True, 'em': '*', 'discreet': False,
-          'compl': False, 'repeat': False, 'obey': False, 'subttl': False}
+          'compl': False, 'oldurl': False, 'repeat': False, 'obey': False,
+          'subttl': False, 'spacing': '', 'font-size': 'small'}
 
     def __init__(self, md=None, bib=None, op={}):
         """ Convert a markdown document with citation code into another one
@@ -28,7 +29,7 @@ class ABNTref(object):
         Arguments:
 
            md:
-           
+
               If defined, it might be the name of the markdown file or a list
               with the lines of the markdown file. If not defined, the class
               will read the standard input which should be either the markdown
@@ -80,6 +81,8 @@ class ABNTref(object):
             self._o['discreet'] = True
         elif a.lower() == 'completo':
             self._o['compl'] = True
+        elif a.lower() == 'url-completa':
+            self._o['oldurl'] = True
         elif a.lower() == 'repetido':
             self._o['repeat'] = True
         elif a.lower() == 'obediente':
@@ -88,6 +91,16 @@ class ABNTref(object):
             self._o['subttl'] = True
         elif re.search('\.bib$', a):
             self._b = a
+        elif a.lower() == 'normalsize':
+            self._o['font-size'] = 'normalsize'
+        elif a.lower() == 'footnotesize':
+            self._o['font-size'] = 'footnotesize'
+        elif a.lower() == 'singlespacing':
+            self._o['spacing'] = 'singlespacing'
+        elif a.lower() == 'onehalfspacing':
+            self._o['spacing'] = 'onehalfspacing'
+        elif a.lower() == 'doublespacing':
+            self._o['spacing'] = 'doublespacing'
         elif a.lower() in ['?', 'h', 'help', '-h', '--help', 'a', 'ajuda', '-a', '--ajuda']:
             # The help and names of arguments are in Portuguese because only
             # Brazilians follow ABNT rules.
@@ -270,6 +283,11 @@ class ABNTref(object):
             if eds[0]:
                 e['editor'] = eds[0]
                 e['cite_editor'] = eds[1]
+
+            # Fix wrong type of entry
+            if e['etype'] == 'inbook' and 'author' in e and 'editor' in e and e['author'] != e['editor']:
+                e['etype'] == 'incollection'
+
             if e['etype'] == 'inbook':
                 if e['author'] == '' and 'editor' in e:
                     e['author'] = e['editor']
@@ -347,6 +365,13 @@ class ABNTref(object):
 
 
     def _AddFormattedRefs(self):
+        if self._o['type'] == 'latex':
+            if self._o['spacing'] == '':
+                self._m.append('\\setlength{\\parskip}{6pt} \\setlength{\\parindent}{0pt} ' +
+                               ' \\' + self._o['font-size'] + '\n')
+            else:
+                self._m.append('\\setlength{\\parskip}{6pt} \\setlength{\\parindent}{0pt} ' +
+                               '\\' + self._o['spacing'] + ' \\' + self._o['font-size'] + '\n')
         self._m.append('\n')
         for k in self._k:
             self._m.append(self._e[k]['ref'])
@@ -476,6 +501,8 @@ class ABNTref(object):
         else:
             ref += self._formated_elements(['edition', 'address', 'publisher'], e)
 
+        ref += self._formated_elements(['howpublished'], e)
+
         # Format final items that common to almost all types
         if e['etype'] != 'thesis':
             if 'month' in e:
@@ -483,7 +510,7 @@ class ABNTref(object):
             else:
                 ref += ', ' + e['year'] + '.'
 
-        # Format more items 
+        # Format more items
         if e['etype'] in ['inbook', 'incollection']:
             ref += self._formated_elements(['volume', 'chapter', 'pages'], e)
         elif e['etype'] not in ['article', 'thesis']:
@@ -495,12 +522,15 @@ class ABNTref(object):
             ref += self._formated_elements(['series'], e)
 
         # Format the remaining items
-        ref += self._formated_elements(['howpublished'], e)
         ref += self._formated_elements(['issn', 'isbn'], e)
         if 'url' in e:
-            surl = re.sub('http[s]*://', '', e['url'])
-            surl = re.sub('/.*', '', surl)
-            ref += ' Disponível em [' + surl + '](' + e['url'] + ').'
+            if self._o['oldurl']:
+                ref += ' Disponível em \\<<' + e['url'] + '>\\>.'
+            else:
+                surl = re.sub('http[s]*://', '', e['url'])
+                surl = re.sub('/.*', '', surl)
+                surl = re.sub('\xad$', '', re.sub('(.)', '\\1\xad', surl)) # soft hyphen
+                ref += ' Disponível em [' + surl + '](' + e['url'] + ').'
         ref += self._formated_elements(['urldate', 'note'], e) + '.'
 
         # Fix punctuation errors that were not avoided

@@ -4,7 +4,7 @@ import sys
 import io
 import re
 import json
-import pypandoc
+import subprocess
 from pybtex.database import parse_file
 
 class ABNTref(object):
@@ -172,7 +172,10 @@ class ABNTref(object):
                 for i in range(len(opt)):
                     if opt[i]['t'] == 'Str':
                         self._parse_arg(opt[i]['c'])
-            t = pypandoc.convert_text(json.dumps(j), 'markdown', 'json')
+            p = subprocess.run(['pandoc', '-t', 'markdown', '-f', 'json'],
+                               stdout=subprocess.PIPE,
+                               input=json.dumps(j).encode('utf-8'))
+            t = p.stdout.decode()
         t = t.split('\n')
         self._m = t
 
@@ -608,7 +611,10 @@ class ABNTref(object):
         """ Print the list of lines of the transformed markdown documment. """
         if self._j:
             t = '\n'.join(self._m)
-            t = pypandoc.convert_text(t, 'json', 'markdown')
+            p = subprocess.run(['pandoc', '-f', 'markdown', '-t', 'json'],
+                               stdout=subprocess.PIPE,
+                               input=t.encode('utf-8'))
+            t = p.stdout.decode()
             j = json.load(io.StringIO(t))
             j['meta'] = self._d
             sys.stdout.write(json.dumps(j))

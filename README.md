@@ -19,12 +19,11 @@ cd ~/bin
 ln -s /caminho/para/abntref/abntref
 ```
 
-Além disso, é necessário instalar as bibliotecas `pypandoc` e `pybtex` para
-*Python 3*. No Ubuntu e em outras distros derivadas do Debian, os comandos para
-instalação são:
+Além disso, é necessário instalar a biblioteca `pybtex` para *Python 3*. No
+Ubuntu e em outras distros derivadas do Debian, o comando para instalação é:
 
 ```
-sudo apt install python3-pypandoc python3-pybtex
+sudo apt install python3-pybtex
 ```
 
 ## Uso

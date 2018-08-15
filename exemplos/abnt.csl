@@ -438,6 +438,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <!--Local, data, etc-->
             <text macro="locators"/>
             <!--Dados complementares "página, volume"-->
+            <text variable="note"/>
           </group>
         </else-if>
         <!--Conferencia-->
@@ -463,6 +464,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <!--Local, data, etc-->
             <text macro="locators" suffix=". "/>
             <!--Dados complementares "página, volume"-->
+            <text variable="note"/>
           </group>
         </else-if>
         <!--Artigo de revista, jornal, etc-->
@@ -482,6 +484,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <!--Dados complementares "página, volume"-->
             <text macro="issued" suffix=". "/>
             <!--Data-->
+            <text variable="note"/>
           </group>
         </else-if>
         <!--Tese-->
@@ -494,6 +497,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <text macro="genre" suffix=" &#8212; "/> <!-- type em .bib -->
             <text variable="publisher" suffix=", "/> <!-- school em .bib -->
             <text variable="publisher-place" suffix="."/> <!-- address em .bib -->
+            <text variable="note"/>
           </group>
         </else-if>
         <!-- Não ha norma ABNT para manuscritos -->
@@ -512,6 +516,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <!--URL, data do acesso-->
             <text macro="archive" suffix=". "/>
             <!--Arquive-->
+            <text variable="note"/>
           </group>
         </else-if>
         <!--Página da WEB-->
@@ -524,6 +529,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <text macro="genre" suffix=". "/>
             <text macro="access" suffix=". "/>
             <!--URL, data do acesso-->
+            <text variable="note"/>
           </group>
         </else-if>
         <!--Relatório-->
@@ -547,6 +553,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <!--Local, data, etc-->
             <text macro="access" suffix="."/>
             <!--URL, data do acesso-->
+            <text variable="note"/>
           </group>
         </else-if>
         <!--Texto para Discussão (Verbete de Dicionario)-->
@@ -571,6 +578,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <text macro="collection-title" prefix="(Texto para discussão, n. " suffix=")."/>
             <text macro="access"/>
             <!--URL, data do acesso-->
+            <text variable="note"/>
           </group>
         </else-if>
         <!--Nota Técnica (Verbete de Enciclopédia)-->
@@ -586,6 +594,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
             <!--Editor-->
             <text macro="issued" prefix=", " suffix=". (Nota técnica)."/>
             <!--Data-->
+            <text variable="note"/>
           </group>
         </else-if>
         <else-if type="paper-conference">
@@ -613,6 +622,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
           <!--Data-->
           <text macro="access"/>
           <!--URL, data do acesso-->
+            <text variable="note"/>
         </else-if>
         <else>
           <text macro="author" suffix=". "/>
@@ -639,6 +649,7 @@ em caixa alta. Utiliza-se antes do nome da conferência a expressão "In". Segun
           <!--Data-->
           <text macro="access"/>
           <!--URL, data do acesso-->
+            <text variable="note"/>
         </else>
       </choose>
     </layout>

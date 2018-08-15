@@ -197,7 +197,7 @@ class ABNTref(object):
 
     def _GetKeys(self):
         md = ' '.join(self._m)
-        keys = re.findall(r'[\W^\\]@([a-zA-Z0-9-]+)', md)
+        keys = re.findall(r'[\W^\\]@([a-zA-Z0-9à-öø-ÿÀ-ÖØ-ß_:#-]+)', md)
         self._k = set(keys)
 
     def _GetBibData(self):
@@ -358,8 +358,9 @@ class ABNTref(object):
         m = re.sub('(\[[^]]*\])', self._sub_in_paren, m)
         for k in self._e:
             if self._o['anchor']:
-                m = re.sub('-@' + self._e[k]['bibkey'] + r'\b', '([' + self._e[k]['year'] + '](#ref-' + self._e[k]['bibkey'] + '))', m)
-                m = re.sub('@' + self._e[k]['bibkey'] + r'\b', self._e[k]['cite'] + ' ([' + self._e[k]['year'] + '](#ref-' + self._e[k]['bibkey'] + '))', m)
+                cleankey = re.sub('[#_:-]', '', self._e[k]['bibkey'])
+                m = re.sub('-@' + self._e[k]['bibkey'] + r'\b', '([' + self._e[k]['year'] + '](#ref-' + cleankey + '))', m)
+                m = re.sub('@' + self._e[k]['bibkey'] + r'\b', self._e[k]['cite'] + ' ([' + self._e[k]['year'] + '](#ref-' + cleankey + '))', m)
             else:
                 m = re.sub('-@' + self._e[k]['bibkey'] + r'\b', '(' + self._e[k]['year'] + ')', m)
                 m = re.sub('@' + self._e[k]['bibkey'] + r'\b', self._e[k]['cite'] + ' (' + self._e[k]['year'] + ')', m)
@@ -415,10 +416,12 @@ class ABNTref(object):
             return m.group(1).upper() + ' ' + m.group(2)
 
         if e['etype'] == 'unknown':
-            if self._o['anchor'] and self._o['type'] == 'latex':
-                e['ref'] = '\\hypertarget{ref-' + e['bibkey'] + '}{}' + e['ref'] + '\n\n'
-            elif self._o['anchor'] and self._o['type'] == 'html':
-                e['ref'] = '<a id="ref-' + e['bibkey'] + '"></a>' + e['ref'] + '\n\n'
+            if self._o['anchor']:
+                cleankey = re.sub('[#_:-]', '', e['bibkey'])
+                if self._o['type'] == 'latex':
+                    e['ref'] = '\\hypertarget{ref-' + cleankey + '}{}' + e['ref'] + '\n\n'
+                else:
+                    e['ref'] = '<a id="ref-' + cleankey + '"></a>' + e['ref'] + '\n\n'
             else:
                 e['ref'] += '\n\n'
             return e
@@ -542,10 +545,12 @@ class ABNTref(object):
         ref = re.sub('\.,', '.', ref)
 
         # Add either anchors (html) or hypertargets (latex)
-        if self._o['anchor'] and self._o['type'] == 'latex':
-            ref = '\\hypertarget{ref-' + e['bibkey'] + '}{}' + ref + '\n\n'
-        elif self._o['anchor'] and self._o['type'] == 'html':
-            ref = '<a id="ref-' + e['bibkey'] + '"></a>' + ref + '\n\n'
+        if self._o['anchor']:
+            cleankey = re.sub('[#_:-]', '', e['bibkey'])
+            if self._o['type'] == 'latex':
+                ref = '\\hypertarget{ref-' + cleankey + '}{}' + ref + '\n\n'
+            else:
+                ref = '<a id="ref-' + cleankey + '"></a>' + ref + '\n\n'
         else:
             ref += '\n\n'
         return ref
@@ -598,10 +603,11 @@ class ABNTref(object):
             g = g.replace(']', ')')
             for k in self._e:
                 if self._o['anchor']:
+                    cleankey = re.sub('[#_:-]', '', self._e[k]['bibkey'])
                     g = re.sub('-@' + self._e[k]['bibkey'] + r'\b',
-                               '[' + self._e[k]['year'] + '](#ref-' + self._e[k]['bibkey'] + ')', g)
+                               '[' + self._e[k]['year'] + '](#ref-' + cleankey + ')', g)
                     g = re.sub('@' + self._e[k]['bibkey'] + r'\b',
-                               self._e[k]['citep'] + ', [' + self._e[k]['year'] + '](#ref-' + self._e[k]['bibkey'] + ')', g)
+                               self._e[k]['citep'] + ', [' + self._e[k]['year'] + '](#ref-' + cleankey + ')', g)
                 else:
                     g = re.sub('-@' + self._e[k]['bibkey'] + r'\b', self._e[k]['year'], g)
                     g = re.sub('@' + self._e[k]['bibkey'] + r'\b', self._e[k]['citep'] + ', ' + self._e[k]['year'], g)

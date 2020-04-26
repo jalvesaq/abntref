@@ -1,7 +1,11 @@
 # ABNTref
 
-Format citations and references in a markdown document according to ABNT rules
-(documentation in Portuguese)
+This software is no longer being developed. It requires the use of `bib`
+files, but it is much better to extract citation keys and references directly
+from Zotero database. See [zotcite](https://github.com/jalvesaq/zotcite).
+
+ABNTref formats citations and references in a markdown document according to
+ABNT rules. The documentation below is in Portuguese.
 
 Formatação de referências bibliográficas em arquivos markdown, seguindo
 o sistema autor-data das normas da ABNT.
